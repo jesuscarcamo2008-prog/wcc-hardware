@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WCC Hardware - Professional Solutions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Manrope', Arial, Helvetica, sans-serif; background: linear-gradient(135deg, #705555 0%, #8b6565 100%); background-attachment: fixed; min-height: 100vh; display: flex; flex-direction: column; }
+    main { flex: 1; }
+    .page { display: none; }
+    .page.active { display: block; animation: fadeIn 0.5s; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* ===== HEADER ===== */
+    .header { text-align: center; padding: 40px 20px; background: rgba(255,255,255,0.95); box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+    .logo-container { display: inline-flex; align-items: center; gap: 30px; }
+    .rectangle { width: 150px; height: 150px; border: 3px solid #333; background: #f2f2f2; display: flex; align-items: center; justify-content: center; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); transition: transform 0.3s; font-size: 60px; }
+    .rectangle:hover { transform: scale(1.05); }
+    .rectangle img { width: 100%; height: 100%; object-fit: cover; border-radius: 9px; }
+    h1 { font-family: 'Archivo Black', sans-serif; font-size: 2.2em; background: linear-gradient(135deg, #333, #04AA6D); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .tagline { font-size: 1.3em; color: #555; font-weight: 600; font-style: italic; }
+
+    /* ===== NAV ===== */
+    .topnav { overflow: hidden; background: #333; box-shadow: 0 2px 10px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 100; display: flex; justify-content: center; flex-wrap: wrap; }
+    .topnav a { color: #f2f2f2; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+    .topnav a:hover { background: #ddd; color: black; }
+    .topnav a.active { background: #04AA6D; color: white; }
+
+    /* ===== CONTENT ===== */
+    .content { padding: 40px 20px; max-width: 1400px; margin: 0 auto; }
+    .home-content { color: white; max-width: 900px; margin: 40px auto; background: rgba(0,0,0,0.7); border-radius: 16px; padding: 40px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+    .home-content p { font-size: 1.15em; line-height: 1.8; }
+    video { width: 100%; max-width: 900px; height: auto; display: block; margin: 40px auto; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+
+    /* ===== TOOLS ===== */
+    .tools-header { display: flex; align-items: center; gap: 30px; margin-bottom: 40px; background: rgba(0,0,0,0.7); padding: 30px; border-radius: 16px; }
+    .tools-header img { border-radius: 12px; }
+    .search-box { width: 100%; max-width: 400px; margin: 0 auto 30px; padding: 14px 20px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50px; background: rgba(255,255,255,0.1); color: white; font-size: 16px; display: block; }
+    .search-box:focus { outline: none; border-color: #04AA6D; box-shadow: 0 0 20px rgba(4,170,109,0.3); }
+    .search-box::placeholder { color: rgba(255,255,255,0.6); }
+    .tools-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+    .tool-item { background: rgba(255,255,255,0.1); padding: 25px; border-radius: 16px; text-align: center; transition: all 0.3s; cursor: pointer; }
+    .tool-item:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.5); background: rgba(4,170,109,0.15); }
+    .tool-item img { width: 100%; height: 200px; object-fit: contain; border-radius: 8px; background: white; padding: 15px; margin-bottom: 15px; }
+    .tool-item p { color: white; font-weight: 700; font-size: 1.1em; }
+
+    /* ===== INFO BOX ===== */
+    .info-box { max-width: 1000px; margin: 0 auto; background: rgba(0,0,0,0.7); padding: 50px; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+    .info-box h2 { text-align: center; font-size: 2.5em; margin-bottom: 40px; color: white; }
+    .info-section { margin-bottom: 40px; padding: 30px; background: rgba(255,255,255,0.05); border-radius: 12px; border-left: 5px solid #04AA6D; }
+    .info-section h3 { color: #04AA6D; font-size: 1.8em; margin-bottom: 20px; }
+    .info-section p { color: white; font-size: 1.15em; line-height: 1.8; }
+
+    /* ===== CONTACT ===== */
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; margin-top: 30px; }
+    .contact-card { background: rgba(255,255,255,0.05); padding: 35px; border-radius: 16px; transition: all 0.3s; }
+    .contact-card:hover { background: rgba(4,170,109,0.1); transform: translateY(-5px); }
+    .contact-card h3 { color: #04AA6D; font-size: 1.5em; margin-bottom: 20px; }
+    .contact-card p { color: white; line-height: 2; }
+    .contact-card strong { color: #04AA6D; display: block; margin-top: 15px; }
+    .contact-card a { color: #04AA6D; text-decoration: none; }
+    .contact-card a:hover { text-decoration: underline; }
+    .highlight-box { margin-top: 40px; padding: 30px; background: rgba(4,170,109,0.15); border-radius: 12px; border-left: 5px solid #04AA6D; }
+    .highlight-box h3 { color: #04AA6D; margin-bottom: 15px; font-size: 1.6em; }
+    .highlight-box p { color: white; font-size: 1.1em; line-height: 1.8; }
+
+    /* ===== CONTACT FORM ===== */
+    .contact-form { margin-top: 40px; padding: 35px; background: rgba(255,255,255,0.05); border-radius: 16px; }
+    .contact-form h3 { color: #04AA6D; font-size: 1.5em; margin-bottom: 25px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; color: white; font-weight: 600; margin-bottom: 8px; }
+    .form-group input,
+    .form-group textarea,
+    .form-group select { width: 100%; padding: 12px 16px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; background: rgba(255,255,255,0.08); color: white; font-family: 'Manrope', sans-serif; font-size: 1em; transition: border-color 0.3s; }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { outline: none; border-color: #04AA6D; }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: rgba(255,255,255,0.4); }
+    .form-group select option { background: #333; color: white; }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .btn-submit { padding: 14px 40px; background: linear-gradient(135deg, #04AA6D, #05d689); color: white; border: none; border-radius: 50px; font-size: 1.05em; font-weight: 700; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(4,170,109,0.4); }
+    .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(4,170,109,0.5); }
+    .form-success { display: none; margin-top: 15px; padding: 15px 20px; background: rgba(4,170,109,0.2); border: 1px solid #04AA6D; border-radius: 10px; color: #04AA6D; font-weight: 600; text-align: center; }
+
+    /* ===== LOCATION ===== */
+    .location-header { text-align: center; margin-bottom: 30px; }
+    .location-header h1 { font-family: 'Archivo Black', sans-serif; color: white !important; font-size: 2em; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); -webkit-text-fill-color: white !important; background: none; }
+
+    /* ===== MODAL ===== */
+    .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); }
+    .modal.active { display: flex; justify-content: center; align-items: center; }
+    .modal-content { background: #2d2d2d; padding: 40px; border-radius: 20px; max-width: 600px; width: 90%; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+    .close-modal { position: absolute; top: 15px; right: 25px; font-size: 40px; color: white; cursor: pointer; transition: all 0.3s; line-height: 1; }
+    .close-modal:hover { color: #04AA6D; transform: rotate(90deg); }
+    .modal-content h3 { color: #04AA6D; font-size: 2em; margin-bottom: 20px; }
+    .modal-content img { width: 100%; max-width: 300px; margin: 20px auto; display: block; border-radius: 12px; background: white; padding: 20px; }
+    .modal-content p { color: white; font-size: 1.1em; line-height: 1.8; }
+    .modal-inquire-btn { display: inline-block; margin-top: 20px; padding: 12px 30px; background: linear-gradient(135deg, #04AA6D, #05d689); color: white; border: none; border-radius: 50px; font-size: 1em; font-weight: 700; cursor: pointer; text-decoration: none; transition: all 0.3s; }
+    .modal-inquire-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(4,170,109,0.4); }
+
+    /* ===== BACK TO TOP ===== */
+    .back-to-top { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: linear-gradient(135deg, #04AA6D, #05d689); color: white; border: none; border-radius: 50%; font-size: 24px; cursor: pointer; opacity: 0; visibility: hidden; transition: all 0.3s; z-index: 999; }
+    .back-to-top.visible { opacity: 1; visibility: visible; }
+    .back-to-top:hover { transform: translateY(-5px); }
+
+    /* ===== FOOTER / COPYRIGHT ===== */
+    footer { background: rgba(0,0,0,0.85); color: rgba(255,255,255,0.75); text-align: center; padding: 28px 20px; font-size: 0.92em; line-height: 1.8; border-top: 2px solid #04AA6D; margin-top: 0; }
+    footer .footer-inner { max-width: 900px; margin: 0 auto; }
+    footer .footer-brand { font-family: 'Archivo Black', sans-serif; color: #04AA6D; font-size: 1.1em; margin-bottom: 6px; }
+    footer .footer-links { margin: 10px 0; }
+    footer .footer-links a { color: rgba(255,255,255,0.6); text-decoration: none; margin: 0 10px; transition: color 0.3s; }
+    footer .footer-links a:hover { color: #04AA6D; }
+    footer .copyright { color: rgba(255,255,255,0.5); font-size: 0.88em; margin-top: 6px; }
+
+    /* ===== MASCOT ===== */
+    #mascot-container { position: fixed; bottom: 20px; left: 20px; z-index: 9999; display: flex; flex-direction: column; align-items: center; cursor: grab; user-select: none; }
+    #mascot-container:active { cursor: grabbing; }
+    #mascot-bubble { background: white; border: 3px solid #04AA6D; border-radius: 16px; padding: 10px 14px; font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 13px; color: #333; max-width: 160px; text-align: center; position: relative; margin-bottom: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); animation: bubblePop 0.3s ease; }
+    #mascot-bubble::after  { content: ''; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: #04AA6D; }
+    #mascot-bubble::before { content: ''; position: absolute; bottom: -8px;  left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: white; z-index: 1; }
+    @keyframes bubblePop { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    #wrenchie { width: 90px; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.35)); transition: transform 0.2s; }
+    #wrenchie:hover { transform: scale(1.08); }
+    #mascot-container.dance-bounce #wrenchie { animation: dance-bounce 0.5s infinite alternate ease-in-out; }
+    #mascot-container.dance-spin   #wrenchie { animation: dance-spin   0.7s infinite linear; }
+    #mascot-container.dance-shake  #wrenchie { animation: dance-shake  0.3s infinite; }
+    #mascot-container.dance-wiggle #wrenchie { animation: dance-wiggle 0.4s infinite alternate ease-in-out; }
+    @keyframes dance-bounce { from { transform: translateY(0)    rotate(-8deg)  scale(1);    } to { transform: translateY(-18px) rotate(8deg)   scale(1.05); } }
+    @keyframes dance-spin   { from { transform: rotate(0deg);   } to { transform: rotate(360deg);  } }
+    @keyframes dance-shake  { 0%  { transform: translateX(-6px) rotate(-5deg); } 50% { transform: translateX(6px) rotate(5deg); } 100% { transform: translateX(-6px) rotate(-5deg); } }
+    @keyframes dance-wiggle { from { transform: skewX(-10deg) scale(1);    } to { transform: skewX(10deg) scale(1.06); } }
+    .arm-left  { transform-origin: 22px 42px; animation: armSwingL 0.5s infinite alternate ease-in-out; }
+    .arm-right { transform-origin: 68px 42px; animation: armSwingR 0.5s infinite alternate ease-in-out; }
+    .leg-left  { transform-origin: 35px 75px; animation: legSwingL 0.5s infinite alternate ease-in-out; }
+    .leg-right { transform-origin: 55px 75px; animation: legSwingR 0.5s infinite alternate ease-in-out; }
+    .eye-left, .eye-right { animation: blink 3s infinite; }
+    @keyframes armSwingL { from { transform: rotate(-20deg); } to { transform: rotate(20deg);  } }
+    @keyframes armSwingR { from { transform: rotate(20deg);  } to { transform: rotate(-20deg); } }
+    @keyframes legSwingL { from { transform: rotate(-15deg); } to { transform: rotate(15deg);  } }
+    @keyframes legSwingR { from { transform: rotate(15deg);  } to { transform: rotate(-15deg); } }
+    @keyframes blink { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+    #mascot-name { font-family: 'Archivo Black', sans-serif; font-size: 11px; color: #04AA6D; margin-top: 4px; letter-spacing: 1px; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      h1 { font-size: 1.6em; }
+      .logo-container { flex-direction: column; }
+      .rectangle { width: 120px; height: 120px; }
+      .tools-header { flex-direction: column; text-align: center; }
+      .info-box { padding: 30px 20px; }
+      footer .footer-links a { display: block; margin: 4px 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVIGATION ─────────────────────────────────────────────────────── -->
+  <div class="topnav">
+    <a onclick="showPage('about',this)" class="active">About</a>
+    <a onclick="showPage('home',this)">Home</a>
+    <a onclick="showPage('tools',this)">Tools</a>
+    <a onclick="showPage('contact',this)">Contact</a>
+    <a onclick="showPage('location',this)">Location</a>
+  </div>
+
+  <main>
+
+  <!-- ── HOME ──────────────────────────────────────────────────────────── -->
+  <div id="home-page" class="page">
+    <div class="header">
+      <div class="logo-container">
+        <div class="rectangle">
+          <img src="wwc.png" alt="WCC Logo" onerror="this.parentElement.innerHTML='🔧';">
+        </div>
+        <div>
+          <h1>WELCOME TO WCC HARDWARE</h1>
+          <p class="tagline">~Building your dreams into reality~</p>
+        </div>
+      </div>
+    </div>
+    <div class="home-content">
+      <p>Greetings, visitor! This is WCC Hardware's official website. WCC Hardware can comply with your demands. Here you can find any essential tool or supply needed for whatever you're planning. We primarily offer a wide range of hand tools, power tools, and related equipment for purchase, rental, or repair, serving both professional tradespeople and DIY enthusiasts.</p>
+    </div>
+    <video autoplay muted loop controls>
+      <source src="VID-20260117-WA0040.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <!-- ── TOOLS ─────────────────────────────────────────────────────────── -->
+  <div id="tools-page" class="page">
+    <div class="content">
+      <div class="tools-header">
+        <img src="media/image20.png" alt="Hardware Tools" width="300" height="300" onerror="this.style.display='none'">
+        <div>
+          <h2 style="margin:0;font-size:2.5em;color:white;">Hardware Tools</h2>
+          <p style="color:white;font-size:1.5em;margin:10px 0;font-style:italic;">"Building your dreams into reality."</p>
+        </div>
+      </div>
+      <input type="text" class="search-box" id="search" placeholder="🔍 Search tools..." oninput="searchTools()">
+      <div class="tools-gallery" id="gallery"></div>
+    </div>
+  </div>
+
+  <!-- ── ABOUT ─────────────────────────────────────────────────────────── -->
+  <div id="about-page" class="page active">
+    <div class="content">
+      <div class="info-box">
+        <h2>About WCC Hardware</h2>
+        <div class="info-section">
+          <h3>Our Mission</h3>
+          <p>At WCC Hardware, our mission is to empower builders, craftsmen, and DIY enthusiasts by providing high-quality tools and equipment at competitive prices. We are committed to delivering exceptional customer service, expert advice, and reliable solutions that help turn your vision into reality.</p>
+        </div>
+        <div class="info-section">
+          <h3> Our Vision</h3>
+          <p>To become the leading hardware destination in our community, recognized for our comprehensive selection of quality tools, innovative solutions, and unwavering commitment to customer satisfaction. We envision a future where WCC Hardware is synonymous with excellence, reliability, and trust.</p>
+        </div>
+        <div class="info-section">
+          <h3>Why Choose Us?</h3>
+          <p>With years of experience serving Corozal and the surrounding communities, WCC Hardware has built a reputation for quality, reliability, and outstanding service. Whether you're a seasoned professional or just starting your first home project, our expert staff is always ready to guide you to the right tools and materials.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CONTACT ────────────────────────────────────────────────────────── -->
+  <div id="contact-page" class="page">
+    <div class="content">
+      <div class="info-box">
+        <h2>Contact Us</h2>
+        <div class="contact-grid">
+          <div class="contact-card">
+            <h3>📞 Get in Touch</h3>
+            <p>
+              <strong>Phone</strong>
+              <a href="tel:6734578">673-4578</a>
+              <strong>Email</strong>
+              <a href="mailto:wcchardware@gmail.com">wcchardware@gmail.com</a>
+              <strong>Hours</strong>
+              Mon–Fri: 7:00 AM – 6:00 PM<br>
+              Saturday: 8:00 AM – 5:00 PM<br>
+              Sunday: 9:00 AM – 3:00 PM
+            </p>
+          </div>
+          <div class="contact-card">
+            <h3>Visit Our Store</h3>
+            <p>
+              <strong>Address</strong>
+              WCC Hardware<br>
+              Corozal Town, Corozal District<br>
+              Belize
+              <strong>Parking</strong>
+              Free customer parking available on-site
+            </p>
+          </div>
+        </div>
+
+        <!-- Practical contact form -->
+        <div class="contact-form">
+          <h3>Send Us a Message</h3>
+          <div class="form-group">
+            <label for="cf-name">Your Name *</label>
+            <input type="text" id="cf-name" placeholder="e.g. John Smith" required>
+          </div>
+          <div class="form-group">
+            <label for="cf-phone">Phone Number</label>
+            <input type="tel" id="cf-phone" placeholder="e.g. 673-0000">
+          </div>
+          <div class="form-group">
+            <label for="cf-email">Email Address</label>
+            <input type="email" id="cf-email" placeholder="e.g. yourname@email.com">
+          </div>
+          <div class="form-group">
+            <label for="cf-subject">Subject *</label>
+            <select id="cf-subject">
+              <option value="">— Select a subject —</option>
+              <option>Product Inquiry</option>
+              <option>Tool Rental</option>
+              <option>Repair Service</option>
+              <option>Pricing</option>
+              <option>General Question</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="cf-message">Message *</label>
+            <textarea id="cf-message" placeholder="How can we help you?"></textarea>
+          </div>
+          <button class="btn-submit" onclick="submitForm()">Send Message </button>
+          <div class="form-success" id="form-success">✅ Thank you! We'll get back to you shortly.</div>
+        </div>
+
+        <div class="highlight-box">
+          <h3>We'd Love to Hear From You!</h3>
+          <p>Whether you have questions about our products, need expert advice on your project, or want to inquire about tool rentals and repairs, our knowledgeable team is here to help!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── LOCATION ───────────────────────────────────────────────────────── -->
+  <div id="location-page" class="page">
+    <div class="content">
+      <div class="info-box">
+        <div class="location-header">
+          <h1> Our Location</h1>
+        </div>
+        <div class="info-section">
+          <h3>Visit Us at WCC Hardware</h3>
+          <p style="text-align:center;font-size:1.2em;margin-bottom:30px;color:white;">
+            <strong style="color:#04AA6D;display:inline;">WCC Hardware</strong><br>
+            Corozal Town, Corozal District, Belize<br>
+            <strong style="color:#04AA6D;display:inline;">Coordinates:</strong> 18°20'12.6"N 88°29'39.5"W
+          </p>
+
+          <div id="map-container" style="text-align:center;margin-top:30px;"></div>
+
+          <div style="margin-top:30px;text-align:center;">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=18.33684,-88.494313"
+               target="_blank" rel="noopener"
+               style="display:inline-block;padding:15px 30px;background:linear-gradient(135deg,#04AA6D,#05d689);color:white;text-decoration:none;border-radius:50px;font-weight:700;font-size:1.1em;box-shadow:0 4px 15px rgba(4,170,109,0.4);">
+               Get Directions
+            </a>
+          </div>
+
+          <div style="margin-top:40px;padding:25px;background:rgba(4,170,109,0.15);border-radius:12px;border-left:5px solid #04AA6D;">
+            <h3 style="color:#04AA6D;margin-bottom:15px;"> Directions &amp; Parking</h3>
+            <p style="color:white;font-size:1.1em;line-height:1.8;">
+              We're conveniently located in Corozal Town with easy access from all major routes.
+              Free customer parking is available on-site. Click "Get Directions" above to navigate
+              directly to our store using Google Maps!
+            </p>
+          </div>
+
+          <div style="margin-top:30px;padding:25px;background:rgba(255,255,255,0.05);border-radius:12px;">
+            <h3 style="color:#04AA6D;margin-bottom:15px;">Store Hours</h3>
+            <p style="color:white;font-size:1.05em;line-height:2;">
+              <strong style="color:#04AA6D;display:inline;">Monday – Friday:</strong> 7:00 AM – 6:00 PM<br>
+              <strong style="color:#04AA6D;display:inline;">Saturday:</strong> 8:00 AM – 5:00 PM<br>
+              <strong style="color:#04AA6D;display:inline;">Sunday:</strong> 9:00 AM – 3:00 PM
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </main><!-- /main -->
+
+  <!-- ── FOOTER / COPYRIGHT ─────────────────────────────────────────────── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">🔧 WCC Hardware</div>
+      <p>Corozal Town, Corozal District, Belize &nbsp;|&nbsp; <a href="tel:6734578" style="color:#04AA6D;text-decoration:none;">673-4578</a> &nbsp;|&nbsp; <a href="mailto:wcchardware@gmail.com" style="color:#04AA6D;text-decoration:none;">wcchardware@gmail.com</a></p>
+      
+      <div class="copyright">&copy; <span id="copy-year"></span> WCC Hardware. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- ── MODAL ──────────────────────────────────────────────────────────── -->
+  <div id="modal" class="modal" onclick="if(event.target===this)closeModal()">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal()">&times;</span>
+      <h3 id="modalTitle"></h3>
+      <img id="modalImg" src="" alt="">
+      <p id="modalDesc"></p>
+      <a class="modal-inquire-btn" onclick="inquireAboutTool()" href="#">📞Inquire About This Tool</a>
+    </div>
+  </div>
+
+  <button class="back-to-top" id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+  <!-- ── WRENCHIE MASCOT ────────────────────────────────────────────────── -->
+  <div id="mascot-container" class="dance-bounce" onclick="cycleDance()" title="Click me to change my dance!">
+    <div id="mascot-bubble">Hi! I'm Wrenchie! 🔧</div>
+    <svg id="wrenchie" viewBox="0 0 90 110" xmlns="http://www.w3.org/2000/svg">
+      <g>
+        <ellipse cx="45" cy="44" rx="22" ry="28" fill="#c0c0c0" stroke="#888" stroke-width="2"/>
+        <rect x="28" y="10" width="34" height="16" rx="8" fill="#aaa" stroke="#888" stroke-width="2"/>
+        <rect x="25" y="14" width="10" height="8" rx="3" fill="#c0c0c0" stroke="#888" stroke-width="1.5"/>
+        <rect x="55" y="14" width="10" height="8" rx="3" fill="#c0c0c0" stroke="#888" stroke-width="1.5"/>
+        <rect x="38" y="60" width="14" height="20" rx="5" fill="#aaa" stroke="#888" stroke-width="2"/>
+        <rect x="30" y="52" width="30" height="5" rx="2.5" fill="#04AA6D" opacity="0.85"/>
+        <ellipse class="eye-left"  cx="37" cy="38" rx="5" ry="6" fill="white" stroke="#555" stroke-width="1.2"/>
+        <ellipse class="eye-right" cx="53" cy="38" rx="5" ry="6" fill="white" stroke="#555" stroke-width="1.2"/>
+        <circle cx="38" cy="39" r="2.5" fill="#222"/>
+        <circle cx="54" cy="39" r="2.5" fill="#222"/>
+        <circle cx="39" cy="37.5" r="1" fill="white"/>
+        <circle cx="55" cy="37.5" r="1" fill="white"/>
+        <path d="M37 48 Q45 55 53 48" stroke="#555" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <ellipse cx="33" cy="46" rx="4" ry="2.5" fill="#ff9999" opacity="0.5"/>
+        <ellipse cx="57" cy="46" rx="4" ry="2.5" fill="#ff9999" opacity="0.5"/>
+        <ellipse cx="45" cy="18" rx="18" ry="7" fill="#FFD700" stroke="#c8a800" stroke-width="1.5"/>
+        <rect x="27" y="18" width="36" height="5" rx="2" fill="#FFD700" stroke="#c8a800" stroke-width="1"/>
+        <ellipse cx="45" cy="23" rx="20" ry="3.5" fill="#FFC200" stroke="#c8a800" stroke-width="1"/>
+        <text x="45" y="22" text-anchor="middle" font-size="7" font-family="Arial Black" fill="#333" font-weight="900">WCC</text>
+      </g>
+      <g class="arm-left">
+        <line x1="22" y1="42" x2="5"  y2="56" stroke="#aaa" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="4"  cy="57" r="5.5" fill="#04AA6D" stroke="#038a58" stroke-width="1.5"/>
+        <circle cx="0"  cy="53" r="2.5" fill="#04AA6D" stroke="#038a58" stroke-width="1"/>
+        <circle cx="3"  cy="51" r="2.5" fill="#04AA6D" stroke="#038a58" stroke-width="1"/>
+        <circle cx="7"  cy="51" r="2.5" fill="#04AA6D" stroke="#038a58" stroke-width="1"/>
+        <circle cx="9"  cy="54" r="2"   fill="#04AA6D" stroke="#038a58" stroke-width="1"/>
+      </g>
+      <g class="arm-right">
+        <line x1="68" y1="42" x2="85" y2="56" stroke="#aaa" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="86" cy="57" r="5.5" fill="#04AA6D" stroke="#038a58" stroke-width="1.5"/>
+        <circle cx="90" cy="53" r="2.5" fill="#04AA6D" stroke="#038a58" stroke-width="1"/>
+        <circle cx="87" cy="51" r="2.5" fill="#04AA6D" stroke="#038a58" stroke-width="1"/>
+        <circle cx="83" cy="51" r="2.5" fill="#04AA6D" stroke="#038a58" stroke-width="1"/>
+        <circle cx="81" cy="54" r="2"   fill="#04AA6D" stroke="#038a58" stroke-width="1"/>
+      </g>
+      <g class="leg-left">
+        <line x1="35" y1="75" x2="28" y2="95" stroke="#888" stroke-width="5" stroke-linecap="round"/>
+        <ellipse cx="25" cy="98" rx="9" ry="5" fill="#333" stroke="#111" stroke-width="1.5"/>
+        <ellipse cx="21" cy="96" rx="5" ry="4" fill="#444" stroke="#111" stroke-width="1"/>
+      </g>
+      <g class="leg-right">
+        <line x1="55" y1="75" x2="62" y2="95" stroke="#888" stroke-width="5" stroke-linecap="round"/>
+        <ellipse cx="65" cy="98" rx="9" ry="5" fill="#333" stroke="#111" stroke-width="1.5"/>
+        <ellipse cx="69" cy="96" rx="5" ry="4" fill="#444" stroke="#111" stroke-width="1"/>
+      </g>
+    </svg>
+    <div id="mascot-name">⚙️ WRENCHIE ⚙️</div>
+  </div>
+
+  <script>
+    // ── AUTO YEAR IN COPYRIGHT ─────────────────────────────────────────────
+    document.getElementById('copy-year').textContent = new Date().getFullYear();
+
+    // ── TOOLS DATA ────────────────────────────────────────────────────────
+    var tools = [
+      {name:'Adjustable Wrenches', img:'media/image7.png',  desc:'Versatile wrenches for various bolt and nut sizes. Essential for plumbing and repairs.'},
+      {name:'Drill',               img:'media/image5.png',  desc:'Powerful electric drill for drilling holes and driving screws. Perfect for construction.'},
+      {name:'Hammer',              img:'media/image4.png',  desc:'Classic hand tool for driving nails and general construction work.'},
+      {name:'Nail Gun',            img:'media/image3.png',  desc:'Pneumatic tool for quick nail driving. Ideal for framing and carpentry.'},
+      {name:'Orbital Sander',      img:'media/image8.png',  desc:'Power sander for smooth finishing on wood and other materials.'},
+      {name:'Paint Brushes',       img:'media/image2.png',  desc:'High-quality brushes for painting walls and furniture.'},
+      {name:'Pliers',              img:'media/image9.png',  desc:'Versatile gripping and cutting tool for electrical work and repairs.'},
+      {name:'Saw',                 img:'media/image6.png',  desc:'Hand saw for cutting wood, plastic, and other materials.'},
+      {name:'Tape Measure',        img:'media/image1.png',  desc:'Retractable measuring tape for accurate measurements.'},
+      {name:'Screwdriver Set',     img:'media/image10.png', desc:'Complete set of flathead and Phillips screwdrivers.'},
+      {name:'Level',               img:'media/image11.png', desc:'Precision tool for ensuring surfaces are perfectly horizontal or vertical.'},
+      {name:'Circular Saw',        img:'media/image12.png', desc:'Power saw with rotating blade for making straight cuts.'},
+      {name:'Socket Set',          img:'media/image13.png', desc:'Comprehensive set of sockets and ratchets for automotive work.'},
+      {name:'Utility Knife',       img:'media/image14.png', desc:'Retractable blade knife for cutting cardboard and drywall.'},
+      {name:'Clamps',              img:'media/image15.png', desc:'Holding tools for securing materials during work.'},
+      {name:'Jigsaw',              img:'media/image16.png', desc:'Power saw for making curved and intricate cuts.'},
+      {name:'Safety Goggles',      img:'media/image17.png', desc:'Protective eyewear to prevent injury from debris.'},
+      {name:'Work Gloves',         img:'media/image18.png', desc:'Durable gloves for hand protection during work.'},
+      {name:'Toolbox',             img:'media/image19.png', desc:'Organized storage for all your tools.'}
+    ];
+
+    var currentToolName = '';
+
+    // ── RENDER TOOLS ──────────────────────────────────────────────────────
+    function loadTools(filtered) {
+      if (filtered === undefined) filtered = tools;
+      var gallery = document.getElementById('gallery');
+      if (!gallery) return;
+      if (filtered.length === 0) {
+        gallery.innerHTML = '<p style="color:white;text-align:center;grid-column:1/-1;font-size:1.2em;padding:40px;">No tools found. Try a different search.</p>';
+        return;
+      }
+      gallery.innerHTML = filtered.map(function(t) {
+        var safeName = t.name.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+        var safeDesc = t.desc.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+        var safeImg  = t.img.replace(/'/g,"\\'");
+        return '<div class="tool-item" onclick="openModal(\'' + safeName + '\',\'' + safeImg + '\',\'' + safeDesc + '\')">'
+             + '<img src="' + t.img + '" alt="' + t.name + '" loading="lazy" onerror="this.style.opacity=\'0.3\'">'
+             + '<p>' + t.name + '</p>'
+             + '</div>';
+      }).join('');
+    }
+
+    function searchTools() {
+      var query = document.getElementById('search').value.toLowerCase().trim();
+      loadTools(tools.filter(function(t){ return t.name.toLowerCase().indexOf(query) !== -1; }));
+    }
+
+    // ── PAGE NAVIGATION ───────────────────────────────────────────────────
+    function showPage(name, el) {
+      document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+      document.querySelectorAll('.topnav a').forEach(function(a){ a.classList.remove('active'); });
+      var page = document.getElementById(name + '-page');
+      if (page) page.classList.add('active');
+      if (el) el.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (name === 'tools')    loadTools();
+      if (name === 'location') loadMap();
+    }
+
+    // ── MODAL ─────────────────────────────────────────────────────────────
+    function openModal(title, img, desc) {
+      currentToolName = title;
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalImg').src = img;
+      document.getElementById('modalImg').alt = title;
+      document.getElementById('modalDesc').textContent = desc;
+      document.getElementById('modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function inquireAboutTool() {
+      closeModal();
+      // Pre-fill contact form and navigate there
+      showPage('contact', document.querySelectorAll('.topnav a')[3]);
+      setTimeout(function() {
+        var subj = document.getElementById('cf-subject');
+        var msg  = document.getElementById('cf-message');
+        if (subj) subj.value = 'Product Inquiry';
+        if (msg)  msg.value  = 'Hello, I would like to inquire about: ' + currentToolName;
+        if (msg)  msg.focus();
+      }, 400);
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // ── CONTACT FORM ──────────────────────────────────────────────────────
+    function submitForm() {
+      var name    = document.getElementById('cf-name').value.trim();
+      var subject = document.getElementById('cf-subject').value;
+      var message = document.getElementById('cf-message').value.trim();
+
+      if (!name)    { alert('Please enter your name.');    document.getElementById('cf-name').focus();    return; }
+      if (!subject) { alert('Please select a subject.');   document.getElementById('cf-subject').focus(); return; }
+      if (!message) { alert('Please enter your message.'); document.getElementById('cf-message').focus(); return; }
+
+      // Build a mailto link as a practical fallback
+      var email   = document.getElementById('cf-email').value.trim();
+      var phone   = document.getElementById('cf-phone').value.trim();
+      var body    = 'Name: ' + name + '\nPhone: ' + (phone || 'N/A') + '\nEmail: ' + (email || 'N/A') + '\n\nMessage:\n' + message;
+      var mailto  = 'mailto:wcchardware@gmail.com?subject=' + encodeURIComponent(subject + ' – WCC Hardware') + '&body=' + encodeURIComponent(body);
+
+      window.location.href = mailto;
+
+      // Show success message
+      var s = document.getElementById('form-success');
+      s.style.display = 'block';
+      setTimeout(function(){ s.style.display = 'none'; }, 6000);
+
+      // Clear form
+      ['cf-name','cf-phone','cf-email','cf-message'].forEach(function(id){
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('cf-subject').value = '';
+    }
+
+    // ── MAP ───────────────────────────────────────────────────────────────
+    function loadMap() {
+      var mapContainer = document.getElementById('map-container');
+      if (!mapContainer || mapContainer.hasChildNodes()) return;
+      var iframe = document.createElement('iframe');
+      iframe.src = 'https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3787.2288745147066!2d-88.49431299999999!3d18.33684!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTjCsDIwJzEyLjYiTiA4OMKwMjknMzkuNSJX!5e0!3m2!1sen!2sbz!4v1769179482580!5m2!1sen!2sbz';
+      iframe.width  = '100%';
+      iframe.height = '450';
+      iframe.style.cssText = 'border:0;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.3);max-width:900px;display:block;margin:0 auto;';
+      iframe.setAttribute('allowfullscreen', '');
+      iframe.setAttribute('loading', 'lazy');
+      iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+      iframe.setAttribute('title', 'WCC Hardware Location');
+      mapContainer.appendChild(iframe);
+    }
+
+    // ── BACK TO TOP ───────────────────────────────────────────────────────
+    window.addEventListener('scroll', function() {
+      var btn = document.getElementById('topBtn');
+      if (btn) btn.classList.toggle('visible', window.scrollY > 300);
+    });
+
+    // ── MASCOT ────────────────────────────────────────────────────────────
+    var dances  = ['dance-bounce','dance-spin','dance-shake','dance-wiggle'];
+    var msgs    = [
+      "Hi! I'm Wrenchie! 🔧",
+      "Need a tool? We got it! 💪",
+      "WCC Hardware rocks! 🏗️",
+      "Click me again! 😄",
+      "Building dreams! 🌟",
+      "Spin to WIN! 🌀",
+      "Drag me anywhere! 🖱️"
+    ];
+    var danceIdx = 0, msgIdx = 0, wasDragged = false;
+
+    function cycleDance() {
+      if (wasDragged) { wasDragged = false; return; }
+      var mc = document.getElementById('mascot-container');
+      dances.forEach(function(d){ mc.classList.remove(d); });
+      danceIdx = (danceIdx + 1) % dances.length;
+      mc.classList.add(dances[danceIdx]);
+      msgIdx = (msgIdx + 1) % msgs.length;
+      setBubble(msgs[msgIdx]);
+    }
+
+    function setBubble(text) {
+      var b = document.getElementById('mascot-bubble');
+      b.textContent = text;
+      b.style.animation = 'none';
+      void b.offsetWidth;
+      b.style.animation = 'bubblePop 0.3s ease';
+    }
+
+    setInterval(function() {
+      msgIdx = (msgIdx + 1) % msgs.length;
+      setBubble(msgs[msgIdx]);
+    }, 4000);
+
+    // ── DRAG ──────────────────────────────────────────────────────────────
+    (function() {
+      var mc       = document.getElementById('mascot-container');
+      var dragging = false, moved = false;
+      var startX, startY, origLeft, origBottom;
+
+      function initPos() {
+        var rect   = mc.getBoundingClientRect();
+        mc.style.left   = rect.left + 'px';
+        mc.style.bottom = (window.innerHeight - rect.bottom) + 'px';
+      }
+
+      function startDrag(cx, cy) {
+        initPos();
+        dragging = true; moved = false;
+        startX = cx; startY = cy;
+        origLeft   = parseFloat(mc.style.left);
+        origBottom = parseFloat(mc.style.bottom);
+        mc.style.transition = 'none';
+        mc.style.cursor = 'grabbing';
+      }
+
+      function moveDrag(cx, cy) {
+        if (!dragging) return;
+        var dx = cx - startX, dy = cy - startY;
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
+        var newLeft   = Math.max(0, Math.min(window.innerWidth  - mc.offsetWidth,  origLeft   + dx));
+        var newBottom = Math.max(0, Math.min(window.innerHeight - mc.offsetHeight, origBottom - dy));
+        mc.style.left   = newLeft   + 'px';
+        mc.style.bottom = newBottom + 'px';
+      }
+
+      function endDrag() {
+        if (!dragging) return;
+        dragging = false;
+        mc.style.cursor = 'pointer';
+        if (moved) wasDragged = true;
+      }
+
+      mc.addEventListener('mousedown',  function(e){ startDrag(e.clientX, e.clientY); e.preventDefault(); });
+      document.addEventListener('mousemove', function(e){ moveDrag(e.clientX, e.clientY); });
+      document.addEventListener('mouseup',   endDrag);
+
+      mc.addEventListener('touchstart', function(e){ startDrag(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }, { passive: false });
+      document.addEventListener('touchmove', function(e){ moveDrag(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+      document.addEventListener('touchend',  endDrag);
+    })();
+  </script>
+</body>
+</html>
